@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Dark is the base theme — it is the one that gets used. Light is a warm
+   beige inversion rather than a naive flip, so the identity survives both. */
+:root {
+  color-scheme: dark;
+  --c-ground: 20 18 14;
+  --c-surface: 28 25 21;
+  --c-raised: 36 33 27;
+  --c-line: 51 46 38;
+  --c-line-soft: 41 37 30;
+  --c-ink: 239 232 217;
+  --c-ink-2: 167 158 140;
+  --c-ink-3: 118 111 96;
+  --c-accent: 109 194 155;
+  --c-accent-soft: 30 58 47;
+  --c-on-accent: 16 34 27;
+  --c-solo: 109 194 155;
+  --c-hint: 214 164 76;
+  --c-edtl: 224 133 115;
+  --c-cf-gray: 154 146 130;
+  --c-cf-green: 98 180 115;
+  --c-cf-cyan: 63 179 187;
+  --c-cf-blue: 108 151 221;
+  --c-cf-purple: 176 120 212;
+  --c-cf-orange: 221 144 64;
+  --c-cf-red: 224 104 90;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --c-ground: 235 228 214;
+  --c-surface: 255 255 255;
+  --c-raised: 247 243 235;
+  --c-line: 217 207 187;
+  --c-line-soft: 230 222 205;
+  --c-ink: 33 31 26;
+  --c-ink-2: 102 95 81;
+  --c-ink-3: 148 139 120;
+  --c-accent: 31 93 70;
+  --c-accent-soft: 224 234 228;
+  --c-on-accent: 255 255 255;
+  --c-solo: 31 93 70;
+  --c-hint: 143 100 20;
+  --c-edtl: 160 63 51;
+  --c-cf-gray: 138 131 117;
+  --c-cf-green: 62 142 79;
+  --c-cf-cyan: 20 134 142;
+  --c-cf-blue: 44 95 168;
+  --c-cf-purple: 123 63 160;
+  --c-cf-orange: 187 103 20;
+  --c-cf-red: 179 58 46;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-ground text-ink font-sans;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  ::selection {
+    background: rgb(var(--c-accent) / 0.28);
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-1 ring-offset-ground rounded-sm;
+  }
+  /* Native controls follow the theme rather than the OS */
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+  input[type='date']::-webkit-calendar-picker-indicator {
+    filter: invert(0.7);
+    cursor: pointer;
+  }
+  :root[data-theme='light'] input[type='date']::-webkit-calendar-picker-indicator {
+    filter: none;
+  }
+}
+
+@layer components {
+  /* Wide, heavy numerals — the width axis is doing the work here, not size. */
+  .stat-num {
+    font-family: 'Archivo', sans-serif;
+    font-stretch: 118%;
+    font-weight: 780;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.015em;
+  }
+  .eyebrow {
+    @apply text-2xs font-bold uppercase tracking-[0.13em] text-ink3;
+  }
+  .field-label {
+    @apply text-2xs font-bold uppercase tracking-[0.11em] text-ink3;
+  }
+  .input {
+    @apply w-full bg-surface border border-line rounded px-2.5 py-2 text-[14px]
+           placeholder:text-ink3 focus:border-accent focus:outline-none;
+  }
+  .hairline {
+    @apply border-b border-line;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Thin scrollbars that match the theme instead of the OS */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--c-line)) transparent;
+}
+*::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgb(var(--c-line));
+  border-radius: 6px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
