@@ -1,8 +1,10 @@
 node_modules/
 dist/
 
-# your data — the database rebuilds itself from schema + seed on first start
-data/
+# your database — rebuilds itself from schema + seed on first start.
+# Anchored with a leading slash: a bare `data/` would also swallow
+# server/data/, which is the seed catalogue and has to be committed.
+/data/
 
 .env
 .env.*
