@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { db } from '../db.js';
 import { todayYmd, addDays } from '../lib/spaced.js';
+import { readiness, pace } from '../lib/readiness.js';
+import { getSetting } from '../db.js';
 
 export const statsRouter = Router();
 
@@ -47,6 +49,23 @@ statsRouter.get('/', (_req, res) => {
   ).get({ today }).n;
 
   const stuck = db.prepare("SELECT COUNT(*) AS n FROM solves WHERE verdict = 'stuck'").get().n;
+
+  /* Prep runs on the same spacing machinery, so its due count sits alongside
+   * the solve one — Today should show the whole day's work, not the DSA half. */
+  const prepDue = db.prepare(
+    'SELECT COUNT(*) AS n FROM attempts a WHERE a.due_on IS NOT NULL AND a.due_on <= @today '
+    + 'AND a.id = (SELECT MAX(b.id) FROM attempts b WHERE b.item_key = a.item_key)'
+  ).get({ today }).n;
+
+  const prepToday = db.prepare(
+    'SELECT COUNT(*) AS n FROM attempts WHERE attempted_on = @today'
+  ).get({ today }).n;
+
+  const prepByTrack = db.prepare(`
+    SELECT p.track,
+      COUNT(*) AS total,
+      SUM(CASE WHEN EXISTS (SELECT 1 FROM attempts a WHERE a.item_key = p.key) THEN 1 ELSE 0 END) AS touched
+    FROM prep_items p GROUP BY p.track`).all();
 
   const topics = db.prepare(`
     SELECT st.topic,
@@ -97,7 +116,20 @@ statsRouter.get('/', (_req, res) => {
     difficulty,
     cfBands,
     heatmap,
-    ladder
+    ladder,
+    prepDue,
+    prepToday,
+    prepByTrack
+  });
+});
+
+/* Readiness against the target, per axis and per company. The one number in
+ * the app that is allowed to be discouraging. */
+statsRouter.get('/readiness', (_req, res) => {
+  const targetCtc = Number(getSetting('targetCtc', 30));
+  res.json({
+    ...readiness({ targetCtc }),
+    pace: pace({ targetDate: getSetting('targetDate', null), targetCtc })
   });
 });
 

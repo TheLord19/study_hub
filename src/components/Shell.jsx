@@ -1,14 +1,31 @@
 import { NavLink } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
+/* Twelve flat links is a list nobody reads. Grouping them says what the app
+ * thinks the work is: four practice tracks, not one with three afterthoughts. */
 const NAV = [
-  { to: '/', label: 'Today', end: true },
-  { to: '/ladder', label: 'Ladder' },
-  { to: '/companies', label: 'Companies' },
-  { to: '/log', label: 'Log' },
-  { to: '/patterns', label: 'Patterns' },
-  { to: '/body', label: 'Body' },
-  { to: '/builds', label: 'Builds' }
+  { group: null, items: [
+    { to: '/', label: 'Today', end: true },
+    { to: '/plan', label: 'The plan' }
+  ] },
+  { group: 'Practice', items: [
+    { to: '/ladder', label: 'Algorithms' },
+    { to: '/machine-coding', label: 'Machine coding' },
+    { to: '/system-design', label: 'System design' },
+    { to: '/behavioural', label: 'Behavioural' }
+  ] },
+  { group: 'Target', items: [
+    { to: '/companies', label: 'Companies' },
+    { to: '/pipeline', label: 'Pipeline' }
+  ] },
+  { group: 'Record', items: [
+    { to: '/log', label: 'Log' },
+    { to: '/patterns', label: 'Patterns' }
+  ] },
+  { group: 'Life', items: [
+    { to: '/body', label: 'Body' },
+    { to: '/builds', label: 'Builds' }
+  ] }
 ];
 
 function useTheme() {
@@ -58,14 +75,21 @@ export default function Shell({ stats, children }) {
               Grind Log
             </span>
           </div>
-          <div className="font-mono text-[10px] text-ink3 mt-1 ml-[15px]">dsa · companies · body</div>
+          <div className="font-mono text-[10px] text-ink3 mt-1 ml-[15px]">dsa · design · offers</div>
         </div>
 
         <nav className="px-4 flex lg:flex-col gap-0.5 overflow-x-auto lg:overflow-visible pb-3 lg:pb-0 border-l border-line lg:border-l-0 ml-4 lg:ml-0">
-          {NAV.map((n) => (
-            <NavLink key={n.to} to={n.to} end={n.end} className={link}>
-              {n.label}
-            </NavLink>
+          {NAV.map((section) => (
+            <div key={section.group ?? 'top'} className="contents lg:block">
+              {section.group && (
+                <div className="hidden lg:block eyebrow px-3 pt-4 pb-1">{section.group}</div>
+              )}
+              {section.items.map((n) => (
+                <NavLink key={n.to} to={n.to} end={n.end} className={link}>
+                  {n.label}
+                </NavLink>
+              ))}
+            </div>
           ))}
         </nav>
 

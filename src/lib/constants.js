@@ -41,3 +41,53 @@ export function cfRank(rating) {
 }
 
 export const BUILD_STATUS = ['idea', 'building', 'shipped', 'shelved'];
+
+/* The four axes a product loop is scored on. DSA is the one everybody grinds
+ * and it is well under half the weight — which is the single most useful
+ * thing this app has to say. */
+export const AXES = [
+  { id: 'dsa', label: 'Algorithms',    short: 'DSA', to: '/ladder' },
+  { id: 'lld', label: 'Machine coding', short: 'LLD', to: '/machine-coding' },
+  { id: 'hld', label: 'System design',  short: 'HLD', to: '/system-design' },
+  { id: 'bhv', label: 'Behavioural',    short: 'BHV', to: '/behavioural' }
+];
+
+export const AXIS_COLOR = {
+  dsa: 'rgb(var(--c-accent))',
+  lld: 'rgb(var(--c-solo))',
+  hld: 'rgb(var(--c-hint))',
+  bhv: 'rgb(var(--c-edtl))'
+};
+
+/* Verdict wording changes by track — "solved it" is wrong for a design
+ * question you talked through, and wrong again for a story you rehearsed. */
+export const TRACK_VERDICTS = {
+  hld: {
+    solo: 'Held it unaided',
+    hint: 'Needed a nudge',
+    edtl: 'Read the answer',
+    stuck: 'Could not hold it'
+  },
+  lld: {
+    solo: 'Wrote it clean',
+    hint: 'Needed a nudge',
+    edtl: 'Read a solution',
+    stuck: 'Did not finish'
+  },
+  bhv: {
+    solo: 'Told it well',
+    hint: 'Rough but there',
+    edtl: 'Had to write it out',
+    stuck: 'No story yet'
+  }
+};
+
+export const STORY_THEMES = [
+  'ownership', 'conflict', 'failure', 'deadline', 'ambiguity', 'leadership',
+  'customer', 'depth', 'learning', 'disagreement', 'simplification', 'scale'
+];
+
+export const lpa = (n) =>
+  n == null ? '—' : `${Number(n) % 1 === 0 ? Number(n) : Number(n).toFixed(1)}L`;
+
+export const pct = (n) => `${Math.round((n ?? 0) * 100)}%`;

@@ -15,6 +15,19 @@ db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
 
 db.exec(fs.readFileSync(path.join(here, 'schema.sql'), 'utf8'));
+
+/* Columns added after the first release. CREATE TABLE IF NOT EXISTS will not
+ * touch a table that already exists, so a database created before these landed
+ * needs them added by hand. Adding a column is the only migration shape used
+ * here — anything destructive should be a new table plus a copy, deliberately. */
+function addColumn(table, column, decl) {
+  const has = db.prepare(`PRAGMA table_info(${table})`).all().some((c) => c.name === column);
+  if (!has) db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${decl}`);
+}
+addColumn('companies', 'ctc_low', 'REAL');
+addColumn('companies', 'ctc_high', 'REAL');
+addColumn('companies', 'loop', "TEXT NOT NULL DEFAULT '{}'");
+
 seedReferenceData(db);
 
 /* Settings are a tiny key/value table; JSON in, JSON out. */

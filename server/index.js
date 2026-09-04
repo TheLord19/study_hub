@@ -9,6 +9,9 @@ import { catalogueRouter } from './routes/catalogue.js';
 import { bodyRouter } from './routes/body.js';
 import { buildsRouter } from './routes/builds.js';
 import { statsRouter } from './routes/stats.js';
+import { prepRouter } from './routes/prep.js';
+import { storiesRouter } from './routes/stories.js';
+import { pipelineRouter } from './routes/pipeline.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(here, '..');
@@ -22,21 +25,38 @@ app.use('/api', catalogueRouter);
 app.use('/api/body', bodyRouter);
 app.use('/api/builds', buildsRouter);
 app.use('/api/stats', statsRouter);
+app.use('/api/prep', prepRouter);
+app.use('/api/stories', storiesRouter);
+app.use('/api/pipeline', pipelineRouter);
 
-app.get('/api/settings', (_req, res) => {
-  res.json({
-    dailyGoal: getSetting('dailyGoal', 2),
-    theme: getSetting('theme', 'dark')
-  });
+const settings = () => ({
+  dailyGoal: getSetting('dailyGoal', 2),
+  theme: getSetting('theme', 'dark'),
+  targetCtc: getSetting('targetCtc', 30),
+  targetDate: getSetting('targetDate', null),
+  currentCtc: getSetting('currentCtc', null)
 });
 
+app.get('/api/settings', (_req, res) => res.json(settings()));
+
 app.put('/api/settings', (req, res) => {
-  const { dailyGoal, theme } = req.body ?? {};
+  const { dailyGoal, theme, targetCtc, targetDate, currentCtc } = req.body ?? {};
   if (Number.isFinite(Number(dailyGoal))) {
     setSetting('dailyGoal', Math.min(Math.max(Number(dailyGoal), 1), 20));
   }
   if (['dark', 'light', 'system'].includes(theme)) setSetting('theme', theme);
-  res.json({ dailyGoal: getSetting('dailyGoal', 2), theme: getSetting('theme', 'dark') });
+  if (Number.isFinite(Number(targetCtc))) {
+    setSetting('targetCtc', Math.min(Math.max(Number(targetCtc), 1), 500));
+  }
+  if (Number.isFinite(Number(currentCtc))) {
+    setSetting('currentCtc', Math.min(Math.max(Number(currentCtc), 0), 500));
+  }
+  if (typeof targetDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(targetDate)) {
+    setSetting('targetDate', targetDate);
+  } else if (targetDate === null) {
+    setSetting('targetDate', null);
+  }
+  res.json(settings());
 });
 
 /* Whole-database export, so the data is portable and yours. */
@@ -48,6 +68,11 @@ app.get('/api/export', (_req, res) => {
     exportedAt: new Date().toISOString(),
     solves: table('solves'),
     solve_topics: table('solve_topics'),
+    attempts: table('attempts'),
+    stories: table('stories'),
+    story_links: table('story_links'),
+    applications: table('applications'),
+    app_events: table('app_events'),
     runs: table('runs'),
     weights: table('weights'),
     builds: table('builds'),
@@ -74,7 +99,9 @@ app.listen(PORT, () => {
   const problems = db.prepare('SELECT COUNT(*) AS n FROM problems').get().n;
   const companies = db.prepare('SELECT COUNT(*) AS n FROM companies').get().n;
   const ladder = db.prepare('SELECT COUNT(*) AS n FROM curriculum').get().n;
+  const prep = db.prepare('SELECT COUNT(*) AS n FROM prep_items').get().n;
   console.log(`grind-log api  →  http://localhost:${PORT}`);
   console.log(`db             →  ${dbPath}`);
   console.log(`catalogue      →  ${problems} problems · ${ladder} on the ladder · ${companies} companies`);
+  console.log(`prep           →  ${prep} design / coding / behavioural items`);
 });

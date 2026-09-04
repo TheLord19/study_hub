@@ -1,6 +1,7 @@
 import { api } from '../lib/api.js';
 import { useRefresh, useResource } from '../lib/useResource.jsx';
-import { ALL_TOPICS } from '../lib/constants.js';
+import { Link } from 'react-router-dom';
+import { ALL_TOPICS, AXES, AXIS_COLOR, pct } from '../lib/constants.js';
 import QuickLog from '../components/QuickLog.jsx';
 import SolveRow from '../components/SolveRow.jsx';
 import Heatmap from '../components/Heatmap.jsx';
@@ -29,6 +30,8 @@ export default function Today({ stats }) {
   const { data: stuck } = useResource(() => api.stuck(), [tick]);
   const { data: next } = useResource(() => api.nextUp(), [tick]);
   const { data: recent } = useResource(() => api.solves({ limit: 8 }), [tick]);
+  const { data: prepDue } = useResource(() => api.prepDue(), [tick]);
+  const { data: readiness } = useResource(() => api.readiness(), [tick]);
 
   if (!stats) return <div className="text-ink3 text-[13px]">Loading…</div>;
 
@@ -52,15 +55,65 @@ export default function Today({ stats }) {
 
       <Section title="Where you stand">
         <div className="grid grid-cols-2 sm:grid-cols-4 bg-surface border border-line rounded overflow-hidden">
-          <Stat lead value={stats.locked} label="Patterns locked"
+          <Stat lead value={readiness ? pct(readiness.overall) : '—'} label="Ready for the target"
+                sub={readiness ? `${readiness.poolSize} companies clear it` : 'working it out'} />
+          <Stat value={stats.locked} label="Patterns locked"
                 sub={`of ${ALL_TOPICS.length} · 3 unassisted each`} />
-          <Stat value={stats.todayCount} label="Solved today" pips={pips} />
-          <Stat value={stats.weekCount} label="This week"
-                sub={`${stats.lc} leetcode · ${stats.cf} codeforces`} />
-          <Stat value={stats.due} label="Due for review"
-                sub={`${stats.total} logged all-time`} />
+          <Stat value={stats.todayCount + (stats.prepToday ?? 0)} label="Logged today" pips={pips} />
+          <Stat value={stats.due + (stats.prepDue ?? 0)} label="Due for review"
+                sub={`${stats.due} problems · ${stats.prepDue ?? 0} prep`} />
         </div>
+
+        {/* Four bars, one per axis, so the shape of the gap is visible before
+            you scroll. Algorithms being the tallest is the normal failure. */}
+        {readiness && (
+          <div className="grid gap-px bg-line border border-line rounded overflow-hidden mt-px
+                          [grid-template-columns:repeat(auto-fit,minmax(150px,1fr))]">
+            {AXES.map((a) => (
+              <Link key={a.id} to={a.to}
+                    className="bg-surface px-4 py-3 no-underline hover:bg-raised transition-colors">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-[12.5px] font-semibold">{a.label}</span>
+                  <span className="ml-auto font-mono text-[11.5px] tabular-nums"
+                        style={{ color: AXIS_COLOR[a.id] }}>
+                    {pct(readiness.axis[a.id])}
+                  </span>
+                </div>
+                <div className="h-1.5 bg-raised rounded-sm overflow-hidden mt-2">
+                  <div className="h-full rounded-sm"
+                       style={{ width: `${readiness.axis[a.id] * 100}%`, background: AXIS_COLOR[a.id] }} />
+                </div>
+                <div className="font-mono text-[10px] text-ink3 mt-1.5">
+                  {Math.round(readiness.blend[a.id])}% of the loop
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </Section>
+
+      {!!prepDue?.length && (
+        <Section
+          title="Prep due"
+          note="Design and behavioural come back on the same spacing as problems."
+        >
+          <div className="grid gap-px bg-line border border-line rounded overflow-hidden">
+            {prepDue.slice(0, 6).map((p) => (
+              <Link
+                key={p.key}
+                to={p.track === 'hld' ? '/system-design' : p.track === 'lld' ? '/machine-coding' : '/behavioural'}
+                className="bg-surface px-4 py-2.5 flex items-baseline gap-3 no-underline hover:bg-raised transition-colors"
+              >
+                <span className="w-1.5 h-1.5 rounded-full shrink-0"
+                      style={{ background: AXIS_COLOR[p.track] }} />
+                <span className="text-[13.5px] font-semibold">{p.title}</span>
+                <span className="font-mono text-[10.5px] text-ink3">{p.minutes}m</span>
+                <span className="ml-auto font-mono text-[10.5px] text-ink3">due {p.last.due_on}</span>
+              </Link>
+            ))}
+          </div>
+        </Section>
+      )}
 
       <Section
         title="Due for review"

@@ -29,8 +29,11 @@ CREATE TABLE IF NOT EXISTS companies (
   id      INTEGER PRIMARY KEY AUTOINCREMENT,
   slug    TEXT UNIQUE NOT NULL,
   name    TEXT NOT NULL,
-  bucket  TEXT NOT NULL,             -- faang | product | indian-product | service
-  blurb   TEXT
+  bucket   TEXT NOT NULL,            -- faang | product | indian-product | service
+  blurb    TEXT,
+  ctc_low  REAL,                     -- realistic India band for this company, LPA
+  ctc_high REAL,
+  loop     TEXT NOT NULL DEFAULT '{}' -- JSON: how much each axis counts in their loop
 );
 
 -- frequency: 3 = asked constantly, 2 = common, 1 = shows up
@@ -126,3 +129,103 @@ CREATE TABLE IF NOT EXISTS settings (
   key   TEXT PRIMARY KEY,
   value TEXT NOT NULL
 );
+
+-- ---------------------------------------------------------------------------
+-- The rest of the loop.
+--
+-- DSA is one axis of four. A 30 LPA product loop is typically 2-3 algorithm
+-- rounds, one machine-coding/LLD round, one system-design round and one
+-- hiring-manager round — and the last three are where most candidates who
+-- grind only LeetCode get filtered.
+--
+-- `prep_items` is reference data, exactly like `problems`; `attempts` is user
+-- data, exactly like `solves`, and runs through the same verdict + spacing
+-- machinery. Keys are track-scoped: 'hld:url-shortener', 'lld:parking-lot',
+-- 'bhv:conflict-with-teammate'.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS prep_items (
+  key       TEXT PRIMARY KEY,
+  track     TEXT NOT NULL CHECK (track IN ('hld','lld','bhv')),
+  title     TEXT NOT NULL,
+  prompt    TEXT NOT NULL,
+  blurb     TEXT,
+  tier      INTEGER NOT NULL DEFAULT 0,
+  seq       INTEGER NOT NULL DEFAULT 0,
+  weight    INTEGER NOT NULL DEFAULT 2,   -- 3 = asked constantly, 1 = occasional
+  minutes   INTEGER,                      -- how long the real round gives you
+  tags      TEXT NOT NULL DEFAULT '[]',
+  checklist TEXT NOT NULL DEFAULT '[]'    -- what a strong answer has to reach
+);
+CREATE INDEX IF NOT EXISTS idx_prep_track ON prep_items(track, tier, seq);
+
+CREATE TABLE IF NOT EXISTS attempts (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  item_key      TEXT NOT NULL REFERENCES prep_items(key) ON DELETE CASCADE,
+  verdict       TEXT NOT NULL CHECK (verdict IN ('solo','hint','edtl','stuck')),
+  notes         TEXT,
+  minutes       INTEGER,
+  hit           TEXT NOT NULL DEFAULT '[]',  -- JSON array of checklist indices reached
+  attempted_on  TEXT NOT NULL,               -- YYYY-MM-DD
+  reps          INTEGER NOT NULL DEFAULT 0,
+  interval_days INTEGER NOT NULL DEFAULT 0,
+  due_on        TEXT,
+  created_at    TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_attempts_item ON attempts(item_key);
+CREATE INDEX IF NOT EXISTS idx_attempts_due  ON attempts(due_on);
+CREATE INDEX IF NOT EXISTS idx_attempts_date ON attempts(attempted_on DESC);
+
+-- STAR stories. The behavioural round is not answered by reading questions,
+-- it is answered by having six well-shaped stories you can re-aim at any of
+-- them, so the bank is the unit of work — not the question.
+CREATE TABLE IF NOT EXISTS stories (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  title      TEXT NOT NULL,
+  situation  TEXT,
+  task       TEXT,
+  action     TEXT,
+  result     TEXT,
+  metric     TEXT,                         -- the number that makes it land
+  themes     TEXT NOT NULL DEFAULT '[]',
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS story_links (
+  story_id INTEGER NOT NULL REFERENCES stories(id) ON DELETE CASCADE,
+  item_key TEXT    NOT NULL REFERENCES prep_items(key) ON DELETE CASCADE,
+  PRIMARY KEY (story_id, item_key)
+);
+CREATE INDEX IF NOT EXISTS idx_story_links_item ON story_links(item_key);
+
+-- ---------------------------------------------------------------------------
+-- The pipeline. Preparation without applications is a hobby; this is the part
+-- that converts it. company_id is nullable so you can track a company that is
+-- not in the catalogue.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS applications (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  company_id   INTEGER REFERENCES companies(id) ON DELETE SET NULL,
+  company_name TEXT NOT NULL,
+  role         TEXT,
+  ctc_lpa      REAL,
+  stage        TEXT NOT NULL DEFAULT 'wishlist'
+               CHECK (stage IN ('wishlist','applied','oa','phone','onsite','hm','offer','rejected','ghosted')),
+  source       TEXT,                       -- referral | careers page | recruiter | ...
+  applied_on   TEXT,
+  next_on      TEXT,                       -- next scheduled round
+  notes        TEXT,
+  created_at   TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at   TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_applications_stage ON applications(stage);
+
+CREATE TABLE IF NOT EXISTS app_events (
+  id             INTEGER PRIMARY KEY AUTOINCREMENT,
+  application_id INTEGER NOT NULL REFERENCES applications(id) ON DELETE CASCADE,
+  stage          TEXT NOT NULL,
+  happened_on    TEXT NOT NULL,
+  note           TEXT,
+  created_at     TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_app_events_app ON app_events(application_id, happened_on);

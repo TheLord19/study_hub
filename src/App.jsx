@@ -5,6 +5,10 @@ import { RefreshProvider, useRefresh, useResource } from './lib/useResource.jsx'
 import { api } from './lib/api.js';
 
 import Today from './pages/Today.jsx';
+import Plan from './pages/Plan.jsx';
+import Prep from './pages/Prep.jsx';
+import Behavioural from './pages/Behavioural.jsx';
+import Pipeline from './pages/Pipeline.jsx';
 import Ladder from './pages/Ladder.jsx';
 import Companies from './pages/Companies.jsx';
 import CompanyDetail from './pages/CompanyDetail.jsx';
@@ -37,7 +41,12 @@ function Routed() {
     <Shell stats={stats}>
       <Routes>
         <Route path="/" element={<Today stats={stats} />} />
+        <Route path="/plan" element={<Plan />} />
         <Route path="/ladder" element={<Ladder />} />
+        <Route path="/machine-coding" element={<Prep track="lld" />} />
+        <Route path="/system-design" element={<Prep track="hld" />} />
+        <Route path="/behavioural" element={<Behavioural />} />
+        <Route path="/pipeline" element={<Pipeline />} />
         <Route path="/companies" element={<Companies />} />
         <Route path="/companies/:slug" element={<CompanyDetail />} />
         <Route path="/log" element={<Log />} />
