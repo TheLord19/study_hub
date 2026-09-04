@@ -3,7 +3,7 @@ import { api } from '../lib/api.js';
 import { useRefresh, useResource } from '../lib/useResource.jsx';
 import { todayYmd, shortDate, pace, duration } from '../lib/format.js';
 import { LineChart, BarChart } from '../components/Chart.jsx';
-import { Btn, Empty, Field, Panel, Rows, Section, Tag, useToast } from '../components/ui.jsx';
+import { Btn, DeleteBtn, Empty, Field, Panel, Rows, Section, Tag, useToast } from '../components/ui.jsx';
 
 /* Monday-anchored weeks, so a "week" means the same thing every time. */
 function weekKey(ymd) {
@@ -188,7 +188,7 @@ export default function Body() {
                   {r.source !== 'manual' && <Tag tone="accent">{r.source}</Tag>}
                   {r.notes ? <span className="ml-2">{r.notes}</span> : null}
                 </span>
-                <Btn size="xs" variant="quiet" onClick={() => removeRun(r.id)}>delete</Btn>
+                <DeleteBtn onConfirm={() => removeRun(r.id)} />
               </div>
             ))}
           </Rows>

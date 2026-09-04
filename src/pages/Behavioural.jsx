@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { api } from '../lib/api.js';
 import { useRefresh, useResource } from '../lib/useResource.jsx';
 import { STORY_THEMES } from '../lib/constants.js';
-import { Btn, Chip, Empty, Field, Panel, Section, Tag, useToast } from '../components/ui.jsx';
+import { Btn, Chip, DeleteBtn, Empty, Field, Panel, Section, Tag, useToast } from '../components/ui.jsx';
 import Prep from './Prep.jsx';
 
 /* The behavioural round, which is answered by a bank rather than by a list.
@@ -156,7 +156,7 @@ function StoryCard({ s, onEdit, onDelete }) {
           )}
           <div className="flex gap-2 mt-1">
             <Btn size="xs" variant="ghost" onClick={onEdit}>edit</Btn>
-            <Btn size="xs" variant="quiet" onClick={onDelete}>delete</Btn>
+            <DeleteBtn onConfirm={onDelete} />
           </div>
         </div>
       )}

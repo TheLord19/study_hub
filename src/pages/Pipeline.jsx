@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { api } from '../lib/api.js';
 import { useRefresh, useResource } from '../lib/useResource.jsx';
 import { lpa } from '../lib/constants.js';
-import { Btn, Empty, Field, Panel, Section, Seg, Tag, useToast } from '../components/ui.jsx';
+import { Btn, DeleteBtn, Empty, Field, Panel, Section, Seg, Tag, useToast } from '../components/ui.jsx';
 
 /* Applications.
  *
@@ -203,7 +203,7 @@ function Row({ a, stages, onChange, onDelete }) {
             </div>
           )}
 
-          <Btn size="xs" variant="quiet" className="mt-3" onClick={() => onDelete(a)}>delete</Btn>
+          <DeleteBtn className="mt-3" onConfirm={() => onDelete(a)} />
         </div>
       )}
     </div>

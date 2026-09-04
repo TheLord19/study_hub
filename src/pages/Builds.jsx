@@ -3,7 +3,7 @@ import { api } from '../lib/api.js';
 import { useRefresh, useResource } from '../lib/useResource.jsx';
 import { shortDate } from '../lib/format.js';
 import { BUILD_STATUS } from '../lib/constants.js';
-import { Btn, Empty, Field, Panel, Rows, Section, Seg, Tag, useToast } from '../components/ui.jsx';
+import { Btn, DeleteBtn, Empty, Field, Panel, Rows, Section, Seg, Tag, useToast } from '../components/ui.jsx';
 
 const STATUS_OPTS = BUILD_STATUS.map((s) => ({ value: s, label: s[0].toUpperCase() + s.slice(1) }));
 const STATUS_TONE = { idea: 'plain', building: 'accent', shipped: 'solo', shelved: 'stuck' };
@@ -99,7 +99,7 @@ export default function Builds() {
                 <button type="button" onClick={() => cycle(b)} title="Click to advance the status">
                   <Tag tone={STATUS_TONE[b.status]}>{b.status}</Tag>
                 </button>
-                <Btn size="xs" variant="quiet" onClick={() => remove(b.id)}>delete</Btn>
+                <DeleteBtn onConfirm={() => remove(b.id)} />
               </div>
             ))}
           </Rows>
