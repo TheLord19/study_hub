@@ -82,7 +82,10 @@ export default function Shell({ stats, children }) {
           {NAV.map((section) => (
             <div key={section.group ?? 'top'} className="contents lg:block">
               {section.group && (
-                <div className="hidden lg:block eyebrow px-3 pt-4 pb-1">{section.group}</div>
+                <>
+                  <div className="hidden lg:block eyebrow px-3 pt-4 pb-1">{section.group}</div>
+                  <div className="lg:hidden self-stretch w-px my-1.5 bg-line shrink-0" aria-hidden="true" />
+                </>
               )}
               {section.items.map((n) => (
                 <NavLink key={n.to} to={n.to} end={n.end} className={link}>

@@ -275,120 +275,28 @@ export const COMPANIES = [
     ]
   },
   {
-    slug: 'walmart', name: 'Walmart Global Tech', bucket: 'indian-product',
-    blurb: 'Large, steady hirer at a genuine SDE-2 bar. Two algorithm rounds, one design, one hiring manager — and design is not skippable.',
-    q: [
-      ['lc:two-sum', 3], ['lc:merge-intervals', 3], ['lc:number-of-islands', 3],
-      ['lc:lru-cache', 3], ['lc:group-anagrams', 2], ['lc:course-schedule', 2],
-      ['lc:top-k-frequent-elements', 2], ['lc:longest-substring-without-repeating-characters', 2],
-      ['lc:coin-change', 2], ['lc:word-break', 2], ['lc:spiral-matrix', 1],
-      ['lc:kth-largest-element-in-an-array', 1], ['lc:rotting-oranges', 1]
-    ]
-  },
-  {
-    slug: 'navi', name: 'Navi', bucket: 'indian-product',
-    blurb: 'Aggressive pay, aggressive bar. Fast algorithm rounds followed by a hard machine-coding round — they expect working code, not a sketch.',
-    q: [
-      ['lc:longest-substring-without-repeating-characters', 3], ['lc:merge-intervals', 3],
-      ['lc:lru-cache', 3], ['lc:trapping-rain-water', 2], ['lc:course-schedule-ii', 2],
-      ['lc:find-median-from-data-stream', 2], ['lc:word-ladder', 2],
-      ['lc:maximum-subarray', 2], ['lc:subarray-sum-equals-k', 2],
-      ['lc:min-stack', 1], ['lc:sliding-window-maximum', 1], ['lc:edit-distance', 1]
-    ]
-  },
-  {
-    slug: 'cred', name: 'CRED', bucket: 'indian-product',
-    blurb: 'Small teams, high bar, loud opinions about code quality. The LLD round is where craft shows — naming and boundaries are graded, not just output.',
-    q: [
-      ['lc:lru-cache', 3], ['lc:merge-intervals', 3], ['lc:group-anagrams', 2],
-      ['lc:longest-substring-without-repeating-characters', 2], ['lc:number-of-islands', 2],
-      ['lc:min-stack', 2], ['lc:implement-trie-prefix-tree', 2],
-      ['lc:top-k-frequent-elements', 2], ['lc:valid-parentheses', 1],
-      ['lc:course-schedule', 1], ['lc:time-based-key-value-store', 1]
-    ]
-  },
-  {
-    slug: 'groww', name: 'Groww', bucket: 'indian-product',
-    blurb: 'Machine coding plus algorithms. Trading-adjacent teams push on ordering, consistency and what happens when two things arrive at once.',
-    q: [
-      ['lc:merge-intervals', 3], ['lc:lru-cache', 3], ['lc:two-sum', 3],
-      ['lc:find-median-from-data-stream', 2], ['lc:top-k-frequent-elements', 2],
-      ['lc:time-based-key-value-store', 2], ['lc:number-of-islands', 2],
-      ['lc:longest-substring-without-repeating-characters', 2],
-      ['lc:kth-largest-element-in-a-stream', 2], ['lc:coin-change', 1],
-      ['lc:daily-temperatures', 1], ['lc:task-scheduler', 1]
-    ]
-  },
-  {
-    slug: 'meesho', name: 'Meesho', bucket: 'indian-product',
-    blurb: 'Scale is the story — catalogue size and order volume drive the design round. Algorithms are solid-medium rather than exotic.',
-    q: [
-      ['lc:number-of-islands', 3], ['lc:merge-intervals', 3],
-      ['lc:top-k-frequent-elements', 3], ['lc:lru-cache', 2],
-      ['lc:course-schedule', 2], ['lc:product-of-array-except-self', 2],
-      ['lc:longest-consecutive-sequence', 2], ['lc:subarray-sum-equals-k', 2],
-      ['lc:search-in-rotated-sorted-array', 2], ['lc:coin-change', 1],
-      ['lc:rotting-oranges', 1], ['lc:implement-trie-prefix-tree', 1]
-    ]
-  },
-  {
-    slug: 'zeta', name: 'Zeta', bucket: 'indian-product',
-    blurb: 'Banking infrastructure. Correctness questions run deeper than anywhere else on this list — expect to be asked what happens on a retry.',
-    q: [
-      ['lc:lru-cache', 3], ['lc:merge-intervals', 3],
-      ['lc:time-based-key-value-store', 2], ['lc:find-median-from-data-stream', 2],
-      ['lc:course-schedule-ii', 2], ['lc:min-stack', 2],
-      ['lc:longest-substring-without-repeating-characters', 2],
-      ['lc:number-of-islands', 2], ['lc:design-hashmap', 2],
-      ['lc:top-k-frequent-elements', 1], ['lc:insert-interval', 1]
-    ]
-  },
-  {
     slug: 'sprinklr', name: 'Sprinklr', bucket: 'indian-product',
-    blurb: 'Algorithm-heavy and hires in volume, which makes it one of the more realistic first shots at this band. Less LLD weight than the consumer names.',
+    blurb: 'Algorithm-heavy and hires in volume. Comp band and difficulty flavor check out against real reports; this question list is trimmed to the two problems independently corroborated against Sprinklr’s actual LeetCode tag — treat coverage here as a floor, not the full picture.',
     q: [
-      ['lc:two-sum', 3], ['lc:longest-substring-without-repeating-characters', 3],
-      ['lc:merge-intervals', 3], ['lc:number-of-islands', 3],
-      ['lc:kth-largest-element-in-an-array', 2], ['lc:coin-change', 2],
-      ['lc:longest-increasing-subsequence', 2], ['lc:course-schedule', 2],
-      ['lc:trapping-rain-water', 2], ['lc:word-break', 2],
-      ['lc:maximum-subarray', 1], ['lc:group-anagrams', 1], ['lc:edit-distance', 1]
+      ['lc:trapping-rain-water', 1], ['lc:edit-distance', 1]
     ]
   },
   {
     slug: 'arcesium', name: 'Arcesium', bucket: 'indian-product',
-    blurb: 'D. E. Shaw spinout, and it shows. The hardest pure-algorithm bar in this bucket, plus real depth on data correctness.',
+    blurb: 'D. E. Shaw spinout. Reputation for the hardest pure-algorithm bar in this bucket holds up against real reports. Question list trimmed to what’s corroborated (Arcesium’s own tagged sample is small, so absence elsewhere is weak evidence, not proof against) — treat coverage here as a floor, not the full picture.',
     q: [
-      ['lc:median-of-two-sorted-arrays', 3], ['lc:trapping-rain-water', 3],
-      ['lc:merge-k-sorted-lists', 3], ['lc:largest-rectangle-in-histogram', 2],
-      ['lc:word-ladder', 2], ['lc:edit-distance', 2],
-      ['lc:sliding-window-maximum', 2], ['lc:lru-cache', 2],
-      ['lc:burst-balloons', 1], ['lc:n-queens', 1],
-      ['lc:regular-expression-matching', 1], ['lc:find-median-from-data-stream', 2]
+      ['lc:median-of-two-sorted-arrays', 1], ['lc:find-median-from-data-stream', 1],
+      ['lc:word-ladder', 1]
     ]
   },
   {
     slug: 'servicenow', name: 'ServiceNow', bucket: 'indian-product',
-    blurb: 'Good comp with noticeably less competition than the consumer names. Steady, fair loop — nothing exotic, but the design round has teeth.',
+    blurb: 'Good comp with noticeably less competition than the consumer names. The best-verified company in this catalogue — 8 of 12 originally-claimed questions matched ServiceNow’s real LeetCode company tag directly.',
     q: [
-      ['lc:two-sum', 3], ['lc:merge-intervals', 3], ['lc:lru-cache', 2],
-      ['lc:number-of-islands', 2], ['lc:valid-parentheses', 2],
-      ['lc:longest-substring-without-repeating-characters', 2],
-      ['lc:course-schedule', 2], ['lc:top-k-frequent-elements', 2],
-      ['lc:spiral-matrix', 1], ['lc:coin-change', 1],
-      ['lc:binary-tree-level-order-traversal', 1], ['lc:implement-trie-prefix-tree', 1]
-    ]
-  },
-  {
-    slug: 'juspay', name: 'Juspay', bucket: 'indian-product',
-    blurb: 'An unusual, genuinely thoughtful process. They probe how you reason and how you handle being wrong more than what you memorised.',
-    q: [
-      ['lc:lru-cache', 3], ['lc:merge-intervals', 2], ['lc:min-stack', 2],
-      ['lc:longest-substring-without-repeating-characters', 2],
-      ['lc:number-of-islands', 2], ['lc:generate-parentheses', 2],
-      ['lc:course-schedule', 2], ['lc:word-break', 1],
-      ['lc:coin-change', 1], ['lc:implement-queue-using-stacks', 1],
-      ['lc:design-hashmap', 1]
+      ['lc:two-sum', 1], ['lc:merge-intervals', 1], ['lc:lru-cache', 1],
+      ['lc:number-of-islands', 1], ['lc:valid-parentheses', 1],
+      ['lc:longest-substring-without-repeating-characters', 1],
+      ['lc:top-k-frequent-elements', 1], ['lc:coin-change', 1]
     ]
   }
 ];

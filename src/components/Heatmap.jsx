@@ -43,6 +43,8 @@ export default function Heatmap({ data }) {
         <div
           key={key}
           title={`${key} — ${n} solved`}
+          role="img"
+          aria-label={`${key}, ${n} solved`}
           className="w-3 h-3 rounded-sm"
           style={{
             background: `rgb(var(${LEVELS[lv]}))`,

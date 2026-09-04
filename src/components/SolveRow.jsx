@@ -1,7 +1,7 @@
 import { api } from '../lib/api.js';
 import { useRefresh } from '../lib/useResource.jsx';
 import { shortDate, relativeDue } from '../lib/format.js';
-import { Tag, PlatformTag, DifficultyTag, VerdictTag, Btn, useToast } from './ui.jsx';
+import { Tag, PlatformTag, DifficultyTag, VerdictTag, Btn, DeleteBtn, useToast } from './ui.jsx';
 
 /* One logged solve. `mode` decides which actions appear:
  *   review  — the three re-rate buttons, for the due queue
@@ -76,7 +76,7 @@ export default function SolveRow({ solve, today, mode = 'plain' }) {
           </>
         )}
         {mode === 'unstick' && <Btn size="xs" onClick={() => review('solo')}>got it now</Btn>}
-        <Btn size="xs" variant="quiet" onClick={remove}>delete</Btn>
+        <DeleteBtn onConfirm={remove} />
       </div>
     </div>
   );

@@ -66,27 +66,18 @@ export const LOOPS = {
   zoho:          { ctc: [8, 18],  loop: { dsa: 50, lld: 30, hld: 10, bhv: 10 },
                    rounds: 'Long multi-stage programming test. Good practice, but the band does not reach your target.' },
 
-  /* -------------------------------------- indian product, high band, hiring -- */
-  walmart:       { ctc: [28, 50], loop: { dsa: 40, lld: 25, hld: 25, bhv: 10 },
-                   rounds: 'Large, steady hirer with a genuine SDE-2 bar. Design round is not skippable.' },
-  navi:          { ctc: [30, 55], loop: { dsa: 45, lld: 25, hld: 20, bhv: 10 },
-                   rounds: 'Aggressive comp, aggressive bar. Fast algorithm rounds, then a hard LLD.' },
-  cred:          { ctc: [30, 55], loop: { dsa: 35, lld: 30, hld: 25, bhv: 10 },
-                   rounds: 'Small team, high bar, strong opinions on code quality. Craft matters visibly.' },
-  groww:         { ctc: [28, 50], loop: { dsa: 40, lld: 30, hld: 20, bhv: 10 },
-                   rounds: 'Machine coding plus algorithms. Trading-adjacent teams ask about consistency.' },
-  meesho:        { ctc: [28, 50], loop: { dsa: 40, lld: 25, hld: 25, bhv: 10 },
-                   rounds: 'Scale-heavy design questions — the catalogue and order volume are the story.' },
-  zeta:          { ctc: [30, 55], loop: { dsa: 40, lld: 25, hld: 25, bhv: 10 },
-                   rounds: 'Banking infrastructure. Correctness and idempotency questions run deep.' },
+  /* -------------------------------------- indian product, high band, hiring --
+   * Walmart, Navi, CRED, Groww, Meesho, Zeta and Juspay were removed here on
+   * 2026-09-04 — their question lists could not be corroborated against any
+   * real source (GfG/LeetCode-Discuss writeups, the liquidslr company-tag
+   * repo) and read as generic LeetCode grab-bags rather than sourced data.
+   * Re-add only with real, cited sources. */
   sprinklr:      { ctc: [25, 45], loop: { dsa: 50, lld: 20, hld: 20, bhv: 10 },
                    rounds: 'Algorithm-heavy with a large hiring volume. A realistic first target.' },
   arcesium:      { ctc: [30, 50], loop: { dsa: 55, lld: 15, hld: 20, bhv: 10 },
                    rounds: 'D. E. Shaw spinout. Hard algorithms, real depth on data and correctness.' },
   servicenow:    { ctc: [28, 50], loop: { dsa: 45, lld: 20, hld: 25, bhv: 10 },
                    rounds: 'Steady loop, good comp, less competition than the consumer names.' },
-  juspay:        { ctc: [25, 45], loop: { dsa: 45, lld: 25, hld: 20, bhv: 10 },
-                   rounds: 'Unusual, thoughtful process. They probe how you think more than what you memorised.' },
 
   /* -------------------------------------------------------------- service -- */
   tcs:           { ctc: [3.5, 7],  loop: { dsa: 60, lld: 10, hld: 5,  bhv: 25 },

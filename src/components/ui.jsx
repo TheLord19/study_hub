@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { VERDICTS, DIFFICULTY, cfRank } from '../lib/constants.js';
 
 /* ------------------------------------------------------------------ tags -- */
@@ -121,6 +121,40 @@ export function Chip({ on, children, ...props }) {
     >
       {children}
     </button>
+  );
+}
+
+/* One click arms it, a second confirms — a delete that survives a stray click
+ * but never blocks on a native confirm() or a modal. Arms for 2.5s, then
+ * quietly disarms so a hesitation reads as "no" rather than staying loaded. */
+export function DeleteBtn({ onConfirm, size = 'xs', label = 'delete', confirmLabel = 'sure?', className = '' }) {
+  const [armed, setArmed] = useState(false);
+  const timer = useRef(null);
+
+  useEffect(() => () => clearTimeout(timer.current), []);
+
+  function handleClick() {
+    if (!armed) {
+      setArmed(true);
+      timer.current = setTimeout(() => setArmed(false), 2500);
+      return;
+    }
+    clearTimeout(timer.current);
+    setArmed(false);
+    onConfirm();
+  }
+
+  return (
+    <Btn
+      type="button"
+      size={size}
+      variant="quiet"
+      onClick={handleClick}
+      onBlur={() => setArmed(false)}
+      className={`${armed ? 'text-edtl hover:text-edtl' : ''} ${className}`}
+    >
+      {armed ? confirmLabel : label}
+    </Btn>
   );
 }
 
